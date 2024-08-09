@@ -1,19 +1,23 @@
 from base import *
 
+
 class celestial_body:
 
     # Constructor
-    def __init__(self, mass, position, velocity):
+    def __init__(self, name, mass, position, velocity):
+
+        # Set Name
+        self.name = name
 
         # Constant Mass
         self.mass = mass
 
         # Initialise Position and Velocity
-        self.position = np.zeros((max_steps, 2))
-        self.velocity = np.zeros((max_steps, 2))
+        self.position = [(0.0, 0.0)] * max_steps
+        self.velocity = [(0.0, 0.0)] * max_steps
 
         # Initialise Acceleration
-        self.acceleration = np.zeros(2)
+        self.acceleration = (0.0, 0.0)
 
         # Set Initial Position and Velocity
         self.position[0] = position
@@ -21,10 +25,14 @@ class celestial_body:
 
     # Update Functions
     def update_position(self, step, dt):
-        self.position[step] = self.position[step - 1] + self.velocity[step - 1] * dt
+        x_new = self.position[step - 1][0] + self.velocity[step - 1][0] * dt
+        y_new = self.position[step - 1][1] + self.velocity[step - 1][1] * dt
+        self.position[step] = (x_new, y_new)
 
     def update_velocity(self, step, dt):
-        self.velocity[step] = self.velocity[step - 1] + self.acceleration * dt
+        vx_new = self.velocity[step - 1][0] + self.acceleration[0] * dt
+        vy_new = self.velocity[step - 1][1] + self.acceleration[1] * dt
+        self.velocity[step] = (vx_new, vy_new)
 
     def update_acceleration(self, new_acceleration):
         self.acceleration = new_acceleration

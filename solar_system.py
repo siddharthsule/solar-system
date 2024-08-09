@@ -2,6 +2,16 @@ from base import *
 from celestial_body import celestial_body
 
 
+def accleration(r1, r2, m2):
+    rx = r2[0] - r1[0]
+    ry = r2[1] - r1[1]
+    r_mag = m.sqrt(rx ** 2 + ry ** 2)
+    r_hat_x = rx / r_mag
+    r_hat_y = ry / r_mag
+    factor = G * m2 / (r_mag ** 2)
+    return (factor * r_hat_x, factor * r_hat_y)
+
+
 class solar_system:
 
     # Constructor
@@ -9,23 +19,19 @@ class solar_system:
         self.bodies = bodies
 
     # Calculate Acceleration due to all other bodies
-
     def calculate_accelerations(self, step):
-
         for body in self.bodies:
-
-            total_acceleration = np.zeros(2)
-
+            total_acceleration = (0.0, 0.0)
             for other_body in self.bodies:
-
                 if body == other_body:
                     continue
-
-                r = self.bodies[1].position[step - 1] - self.bodies[0].position[step - 1]
-                r_mag = np.sqrt(r[0] ** 2 + r[1] ** 2)
-                r_hat = r / r_mag
-                total_acceleration += G * other_body.mass * r_hat / r_mag ** 2
-
+                ax, ay = accleration(
+                    body.position[step - 1],
+                    other_body.position[step - 1],
+                    other_body.mass
+                )
+                total_acceleration = (
+                    total_acceleration[0] + ax, total_acceleration[1] + ay)
             body.update_acceleration(total_acceleration)
 
     # Update Functions
@@ -45,16 +51,15 @@ class solar_system:
 
     # Simulate System
     def simulate(self, steps, dt):
-
         for step in range(1, steps):
-
             # Update System
             self.update(step, dt)
 
             # Print Progress
-                # Event Counter for Terminal
-            sys.stdout.write("Progress: %d%%   \r" % (step / steps * 100))
-            sys.stdout.flush() # Clear Output
+            sys.stdout.write("Step: {}/{}\r".format(step, steps))
+            sys.stdout.flush()  # Clear Output
+
+        sys.stdout.write("\n")
 
     # Remove Empty Positions
     def remove_empty_positions(self, steps):

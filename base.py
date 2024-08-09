@@ -1,9 +1,5 @@
-# Importing Libraries
 import sys
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import animation
-from numba import jit
+import math as m
 
 # Gravitational Constant
 G = 6.67430e-11

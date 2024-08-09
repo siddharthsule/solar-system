@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
 .venv/
 __pycache__/
+*pyc
 
 # Output
 *.gif
+*.csv
