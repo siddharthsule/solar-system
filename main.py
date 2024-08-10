@@ -4,10 +4,13 @@ from celestial_body import celestial_body
 from solar_system import solar_system
 import argparse
 
+
 def main():
     parser = argparse.ArgumentParser(description="Simulate the solar system.")
-    parser.add_argument('--years', type=int, default=100, help='Number of years to simulate')
-    parser.add_argument('--dt', type=int, default=3600, help='Time step in seconds')
+    parser.add_argument('--years', type=int, default=100,
+                        help='Number of years to simulate')
+    parser.add_argument('--dt', type=int, default=3600,
+                        help='Time step in seconds')
     args = parser.parse_args()
 
     print("Initialising Celestial Bodies...")
@@ -36,7 +39,7 @@ def main():
 
     years = args.years
     steps = int(365.25 * 24) * years  # 1 year = 365.25 days * 24 hours
-    dt = args.dt  # Time step in seconds
+    dt = args.dt  # Time step in seconds, default is 1 hour
 
     print("Simulating Solar System...")
     system = solar_system([sun, mercury, venus, earth,
@@ -53,6 +56,15 @@ def main():
     step = len(system.bodies[0].position) / max_positions
     for body in system.bodies:
         body.position = body.position[::int(step)]
+
+    # For every body in the system, have a name.csv file
+    for body in system.bodies:
+        filename = body.name + ".csv"
+        with open(filename, "w") as file:
+            for i in range(max_positions):
+                x, y = body.position[i]
+                file.write("{}, {}\n".format(x, y))
+
 
 if __name__ == "__main__":
     main()
