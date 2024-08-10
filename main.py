@@ -13,6 +13,10 @@ def main():
                         help='Time step in seconds')
     args = parser.parse_args()
 
+    """
+    To Do: Store Constants in a DataBase and then add them as objects in a loop,
+    instead of hardcoding them here. For now, okay for a small set of plaents.
+    """
     print("Initialising Celestial Bodies...")
     sun = celestial_body(name="sun", mass=mass_sun,
                          position=pos_sun, velocity=vel_sun)
@@ -37,6 +41,8 @@ def main():
     pluto = celestial_body(name="pluto", mass=mass_pluto,
                            position=pos_pluto, velocity=vel_pluto)
 
+    
+    # Number of steps to simulate
     years = args.years
     steps = int(365.25 * 24) * years  # 1 year = 365.25 days * 24 hours
     dt = args.dt  # Time step in seconds, default is 1 hour
