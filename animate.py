@@ -61,7 +61,7 @@ def animate_system(db):
         range(frames)), init_func=init, interval=1, blit=True)
 
     # Save the animation as a GIF using Pillow
-    ani.save('earth_orbit.gif', writer='pillow', fps=30)
+    ani.save('orbit.gif', writer='pillow', fps=30)
 
 
 def main():

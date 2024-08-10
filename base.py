@@ -5,4 +5,4 @@ import math as m
 G = 6.67430e-11
 
 # Max Steps
-max_steps = int(1e6)
+max_steps = int(1e7)

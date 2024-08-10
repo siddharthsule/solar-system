@@ -1,5 +1,8 @@
+years=${1:-10}
+dt=${1:-3600}
+
 echo "Running Solar System Simulation..."
-pypy main.py
+pypy main.py --years $years --dt $dt
 
 echo "Animating Solar System Simulation..."
 py animate.py
