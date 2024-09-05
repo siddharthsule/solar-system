@@ -5,6 +5,8 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
+import matplotlib as mpl
+mpl.rc_file("mplstyleerc")
 
 class dataset:
 
@@ -22,33 +24,45 @@ class database:
 
 def animate_system(db):
 
-    fig, ax = plt.subplots(figsize=(5, 5))
+    fig, ax = plt.subplots(1, 2, figsize=(10, 5))
 
     # Setting up the plot limits
-    ax.set_xlim(-3e12, 3e12)
-    ax.set_ylim(-3e12, 3e12)
-    ax.set_aspect('equal')
+    ax[0].set_xlim(-6e12, 6e12)
+    ax[0].set_ylim(-6e12, 6e12)
+    ax[0].set_aspect('equal')
+    ax[0].set_title('Whole Solar System')
 
-    # Create a plot for each body
+    ax[1].set_xlim(-2.5e11, 2.5e11)
+    ax[1].set_ylim(-2.5e11, 2.5e11)
+    ax[1].set_aspect('equal')
+    ax[1].set_title('Nearby Planets')
+
+    # Create a plot for each body on both axes
     plots = []
+    # Add more colors if needed
+    colors = ['y.', 'b.', 'g.', 'r.', 'm.', 'k.', 'c.']
     for i, ds in enumerate(db.datasets):
-
-        plot, = ax.plot([], [], markersize=5, label=ds.name)
-        plots.append(plot)
+        plot0, = ax[0].plot([], [], colors[i % len(colors)],
+                            markersize=5, label=ds.name)
+        plot1, = ax[1].plot([], [], colors[i % len(colors)],
+                            markersize=5, label=ds.name)
+        plots.append((plot0, plot1))
 
     # Function to initialise the plot
     def init():
-        for plot in plots:
-            plot.set_data([], [])
-        return plots
+        for plot0, plot1 in plots:
+            plot0.set_data([], [])
+            plot1.set_data([], [])
+        return [plot for pair in plots for plot in pair]
 
     # Function to update the plot
     def update(step):
         for i, ds in enumerate(db.datasets):
             x = ds.position[step][0]
             y = ds.position[step][1]
-            plots[i].set_data([x], [y])
-        return plots
+            plots[i][0].set_data([x], [y])
+            plots[i][1].set_data([x], [y])
+        return [plot for pair in plots for plot in pair]
 
     # Check if positions are populated
     if any(len(ds.position) == 0 for ds in db.datasets):
@@ -62,6 +76,9 @@ def animate_system(db):
 
     # Save the animation as a GIF using Pillow
     ani.save('orbit.gif', writer='pillow', fps=30)
+
+    # Optionally, save the animation as a video if ffmpeg is available
+    # ani.save('orbit.mp4', writer='ffmpeg', fps=30)
 
 
 def main():

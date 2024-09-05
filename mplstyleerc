@@ -1,0 +1,19 @@
+# To match with LaTeX Paper
+font.family: serif
+font.serif:  Times New Roman
+font.size:   7
+font.weight: 400
+text.usetex: True
+text.latex.preamble: \usepackage{amsmath}
+mathtext.fontset: cm
+mathtext.rm:      Times New Roman
+mathtext.it:      Times New Roman:italic
+mathtext.bf:      Times New Roman:bold
+
+# Common settings
+axes.titlesize: 12
+axes.labelsize:  10
+
+# Savefig settings
+savefig.bbox:       tight
+savefig.pad_inches: 0.1

@@ -1,4 +1,4 @@
-years=${1:-1}
+years=${1:-2}
 dt=${2:-3600}
 
 echo "Running Solar System Simulation..."
