@@ -1,5 +1,4 @@
 from base import *
-from constants import *
 from celestial_body import celestial_body
 from solar_system import solar_system
 import argparse
@@ -13,43 +12,30 @@ def main():
                         help='Time step in seconds')
     args = parser.parse_args()
 
-    """
-    To Do: Store Constants in a DataBase and then add them as objects in a loop,
-    instead of hardcoding them here. For now, okay for a small set of plaents.
-    """
+    # Load Constants from constants.csv, and create objects for celestial body
     print("Initialising Celestial Bodies...")
-    sun = celestial_body(name="sun", mass=mass_sun,
-                         position=pos_sun, velocity=vel_sun)
-    mercury = celestial_body(
-        name="mercury", mass=mass_mercury, position=pos_mercury, velocity=vel_mercury)
-    venus = celestial_body(name="venus", mass=mass_venus,
-                           position=pos_venus, velocity=vel_venus)
-    earth = celestial_body(name="earth", mass=mass_earth,
-                           position=pos_earth, velocity=vel_earth)
-    moon = celestial_body(name="moon", mass=mass_moon,
-                          position=pos_moon, velocity=vel_moon)
-    mars = celestial_body(name="mars", mass=mass_mars,
-                          position=pos_mars, velocity=vel_mars)
-    jupiter = celestial_body(
-        name="jupiter", mass=mass_jupiter, position=pos_jupiter, velocity=vel_jupiter)
-    saturn = celestial_body(name="saturn", mass=mass_saturn,
-                            position=pos_saturn, velocity=vel_saturn)
-    uranus = celestial_body(name="uranus", mass=mass_uranus,
-                            position=pos_uranus, velocity=vel_uranus)
-    neptune = celestial_body(
-        name="neptune", mass=mass_neptune, position=pos_neptune, velocity=vel_neptune)
-    pluto = celestial_body(name="pluto", mass=mass_pluto,
-                           position=pos_pluto, velocity=vel_pluto)
+    celestial_bodies = []
+    with open("constants.csv", "r") as file:
 
-    
+        # ignore the first line
+        file.readline()
+
+        # Read the rest of the lines
+        for line in file:
+            name, mass, posx, posy, velx, vely = line.split(",")
+            mass = float(mass)
+            position = (float(posx), float(posy))
+            velocity = (float(velx), float(vely))
+            celestial_bodies.append(celestial_body(
+                name, mass, position, velocity))
+
     # Number of steps to simulate
     years = args.years
     steps = int(365.25 * 24) * years  # 1 year = 365.25 days * 24 hours
     dt = args.dt  # Time step in seconds, default is 1 hour
 
     print("Simulating Solar System...")
-    system = solar_system([sun, mercury, venus, earth,
-                          moon, mars, jupiter, saturn, uranus, neptune, pluto])
+    system = solar_system(celestial_bodies)
     system.simulate(steps=steps, dt=dt)
 
     print("Saving Data...")

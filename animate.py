@@ -1,4 +1,6 @@
 import numpy as np
+import os
+import sys
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 from matplotlib import animation
@@ -20,7 +22,7 @@ class database:
 
 def animate_system(db):
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 5))
 
     # Setting up the plot limits
     ax.set_xlim(-3e12, 3e12)
@@ -29,11 +31,9 @@ def animate_system(db):
 
     # Create a plot for each body
     plots = []
-    colors = ['y.', 'b.', 'g.', 'g.', 'r.', 'm.', 'k.']
     for i, ds in enumerate(db.datasets):
 
-        plot, = ax.plot([], [], colors[i % len(colors)] if i != 0 else "yo",
-                        markersize=5, label=ds.name)
+        plot, = ax.plot([], [], markersize=5, label=ds.name)
         plots.append(plot)
 
     # Function to initialise the plot
@@ -66,20 +66,16 @@ def animate_system(db):
 
 def main():
 
-    sun_data = dataset("sun")
-    mercury_data = dataset("mercury")
-    venus_data = dataset("venus")
-    earth_data = dataset("earth")
-    moon_data = dataset("moon")
-    mars_data = dataset("mars")
-    jupiter_data = dataset("jupiter")
-    saturn_data = dataset("saturn")
-    uranus_data = dataset("uranus")
-    neptune_data = dataset("neptune")
-    pluto_data = dataset("pluto")
+    # Find all CSV files and create a dataset for each - except constants.csv
+    datasets = []
+    csv_files = [f for f in os.listdir(".") if f.endswith(
+        ".csv") and f != "constants.csv"]
+    for file in csv_files:
+        # get the name of the file without the extension
+        name = os.path.splitext(file)[0]
+        datasets.append(dataset(name))
 
-    db = database([sun_data, mercury_data, venus_data, earth_data, moon_data,
-                  mars_data, jupiter_data, saturn_data, uranus_data, neptune_data, pluto_data])
+    db = database(datasets)
     animate_system(db)
 
 

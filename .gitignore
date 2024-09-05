@@ -6,3 +6,6 @@ __pycache__/
 # Output
 *.gif
 *.csv
+
+# DON'T Ignore constants.csv
+!constants.csv
